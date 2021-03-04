@@ -1,0 +1,11 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1610357914999,466,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,451.00,217.00,1.00,1.00,http://localhost:9090/create/database,460.00,0.00,21.00
+1610357919143,920,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,687.00,218.00,1.00,1.00,http://localhost:9090/create/container,917.00,0.00,18.00
+1610357923807,357,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,919.00,217.00,1.00,1.00,http://localhost:9090/create/document,355.00,0.00,20.00
+1610357927834,422,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,578.00,224.00,1.00,1.00,http://localhost:9090/create/storedprocedure,420.00,0.00,19.00
+1610357931935,428,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,676.00,228.00,1.00,1.00,http://localhost:9090/create/userdefinedfunction,420.00,0.00,18.00
+1610357936073,366,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,725.00,216.00,1.00,1.00,http://localhost:9090/create/trigger,359.00,0.00,19.00
+1610357940032,417,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,413.00,213.00,1.00,1.00,http://localhost:9090/create/user,411.00,0.00,19.00
+1610358343003,1976,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,451.00,217.00,1.00,1.00,http://localhost:9090/create/database,"1,971.00",0.00,26.00
+1610358348702,3540,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,687.00,218.00,1.00,1.00,http://localhost:9090/create/container,"3,536.00",0.00,19.00
+1610358355973,437,CosmosDB Performance Test,200.00,OK,Users1 1-1,text,true,,919.00,217.00,1.00,1.00,http://localhost:9090/create/document,431.00,0.00,18.00
