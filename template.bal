@@ -81,52 +81,18 @@ function convertToJsonObjectArray(string filePath) returns map<json>[] {
 
     // Create a readable CSV channel from the provided path, panic if an error occurs.
     io:ReadableCSVChannel readableCsvChannel = checkpanic io:openReadableCsvFile(filePath);
-    
-    // Each record (i.e., a single line/entry) in the CSV file will be read as a `string[]`.
-    // Define an array of `string[]` to hold all the records.
+
     string[][] records = [];
-
-    // Read all the records from the provided file via the channel.
     while (readableCsvChannel.hasNext()) {
-        // Attempting reading a single record, panic if an error occurs.
         string[] currentRecord = <string[]> checkpanic readableCsvChannel.getNext();
-
-        // Add the read record to array of records.
         records[records.length()] = currentRecord;
     }
 
-    // The first element of the array represents the column names.
-    // We use the `.shift()` langlib method to REMOVE and retrieve it from the
-    // array. After this operation, the array will not contain the column names, 
-    // i.e., it would only contain the values.
     string[] columns = records.shift();
     int columnCount = columns.length();
 
-    // Create an array of JSON objects from the array of `string[]`. The `.map()` iterable 
-    // operation is used here. 
-    // See https://ballerina.io/learn/by-example/functional-iteration.html for examples.
     map<json>[] objectArray = records.map(function(string[] currentRecord) returns map<json> {
-
-        // This function takes a `string[]` and converts it to a JSON object (`map<json>`)
-        // using the column names identified above.
-        //
-        // Where the `columns` array is ["id", "firstName", "lastName", "age"]
-        // and the `currentRecord` array is ["1", "John", "Doe", "25"]
-        // this function creates the following JSON object.
-        //
-        // {
-        //     id: "1",
-        //     firstName: "John",
-        //     lastName: "Doe",
-        //     age: "25"
-        // }
-
-        // For each record, do the following:
-        // 1. Create an empty `map<json>` value that will be the object representation for the record.
         map<json> obj = {};
-
-        // 2. Set the individual fields, using the relevant value in the `columns` array as the key
-        // and the corresponding value in the `currentRecord` array as the value.
         foreach int index in 0 ..< columnCount {
             obj[columns[index]] = currentRecord[index];
         }
