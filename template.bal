@@ -11,6 +11,10 @@ configurable string masterToken = ?;
 configurable string databaseId = ?;
 configurable string containerId = ?;
 
+const TYPE_CSV = "text/csv";
+const NEW_LINE = "\n";
+const COMMA = ",";
+
 cosmosdb:Configuration config = {
     baseUrl: baseURL,
     masterOrResourceToken: masterToken
@@ -30,11 +34,11 @@ service / on new http:Listener(8090) {
                         id: documentId
                     };
                     json merged = checkpanic documentBody.mergeJson(item);
-                    record {|string id; json ...;|} finalRec = checkpanic merged.cloneWithType(RecordType);
+                    record {|string id; json ...;|} finalRecord = checkpanic merged.cloneWithType(RecordType);
                     string partitionKeyValue = string `"${documentId}"`;
 
                     cosmosdb:Document|error result = azureCosmosClient->createDocument(databaseId, containerId, 
-                        finalRec, partitionKeyValue); 
+                        finalRecord, partitionKeyValue); 
                     if (result is cosmosdb:Document) {
                         log:print("Success!");
                     } else {
@@ -52,26 +56,26 @@ service / on new http:Listener(8090) {
 function convertToJsonObjectArray(mime:Entity bodyPart) returns map<json>[]|error {
     mime:MediaType mediaType = check mime:getMediaType(bodyPart.getContentType());
     string baseType = mediaType.getBaseType();
-    string[][] initial = [];
-    if (baseType == "text/csv") {
-        string array = checkpanic bodyPart.getText();
+    string[][] arrayFromCsv = [];
+    if (baseType == TYPE_CSV) {
+        string textFromCsv = checkpanic bodyPart.getText();
 
-        string[] ss = regex:split(array, "\n");
-        foreach var item in ss {
-            initial.push(regex:split(item, ","));
+        string[] rowArray = regex:split(textFromCsv, NEW_LINE);
+        foreach var row in rowArray {
+            arrayFromCsv.push(regex:split(row, COMMA));
         }
-        string[] columns = initial.shift();
+        string[] columns = arrayFromCsv.shift();
         int columnCount = columns.length();
-        map<json>[] objectArray = initial.map(function(string[] currentRecord) returns map<json> {
-            map<json> obj = {};
+        map<json>[] objectArray = arrayFromCsv.map(function(string[] currentRecord) returns map<json> {
+            map<json> jsonObject = {};
             foreach int index in 0 ..< columnCount {
-                obj[columns[index]] = currentRecord[index];
+                jsonObject[columns[index]] = currentRecord[index];
             }
-            return obj;
+            return jsonObject;
         });
         return objectArray;
     } else {
-        return error("error");
+        return error("Files are not CSV");
     }
 }
 
